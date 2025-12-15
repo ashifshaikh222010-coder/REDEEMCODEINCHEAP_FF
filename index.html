@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Play Store - Premium Redeem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --accent: #ff0055;
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.1) 0%, transparent 20%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 2rem;
+            text-align: center;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* --- Product Container --- */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* --- Product Card --- */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 340px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+        }
+
+        /* Badge */
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .logo-google {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #94a3b8;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0.5rem 0 0.5rem 0;
+            line-height: 1;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-label {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .price-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .price-value {
+            font-size: 2rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+            color: #cbd5e1;
+        }
+
+        .features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #1e293b;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            padding: 2rem;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        /* Payment Section */
+        .payment-section {
+            text-align: center; 
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mobile Pay Button */
+        .btn-pay-mobile {
+            display: none; /* Hidden by default, shown on mobile */
+            background: #22c55e;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .qr-container {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 12px;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 1.5rem; margin-top: 1.5rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.9rem; }
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .form-input:focus { border-color: var(--primary); }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-confirm:hover { background: #e6004c; box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5); }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .btn-pay-mobile { display: block; } /* Show button on mobile */
+            .qr-text-desktop { display: none; } /* Hide scan text on mobile */
+            .container { flex-direction: column; padding: 1rem; }
+            .card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Google Play Store</h1>
+        <p class="subtitle">Official Redeem Codes • Instant Delivery</p>
+    </header>
+
+    <section class="container">
+        <div class="card">
+            <div class="badge">SUPER DEAL</div>
+            <span class="logo-google">Google Play</span>
+            <div class="product-title">10,000</div>
+            <span class="product-label">Redeem Code</span>
+            
+            <div class="price-container">
+                <span class="price-label">Your Price:</span><br>
+                <span class="price-value">₹1300</span>
+            </div>
+
+            <ul class="features">
+                <li>Value: ₹10,000 Code</li>
+                <li>Valid for Indian Accounts</li>
+                <li>Instant Email Delivery</li>
+            </ul>
+            <button class="btn btn-primary" onclick="openModal(1300, '10,000 Redeem Code')">Buy Now</button>
+        </div>
+
+        <div class="card" style="border-color: rgba(255,0,85,0.3);">
+            <div class="badge" style="color: var(--accent);">MEGA OFFER</div>
+            <span class="logo-google">Google Play</span>
+            <div class="product-title">15,000</div>
+            <span class="product-label">Redeem Code</span>
+            
+            <div class="price-container" style="border-color: rgba(255,0,85,0.2); background: rgba(255,0,85,0.05);">
+                <span class="price-label">Your Price:</span><br>
+                <span class="price-value" style="color: var(--accent);">₹1500</span>
+            </div>
+
+            <ul class="features">
+                <li>Value: ₹15,000 Code</li>
+                <li>Valid for Indian Accounts</li>
+                <li>Instant Email Delivery</li>
+            </ul>
+            <button class="btn btn-primary" style="background: linear-gradient(135deg, #ff0055, #ff5e62); color: white; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);" onclick="openModal(1500, '15,000 Redeem Code')">Buy Now</button>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Checkout</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="payment-section">
+                <a id="upiLinkBtn" href="#" class="btn-pay-mobile">
+                    Tap to Pay ₹<span id="mobilePayAmount">0</span> via UPI App
+                </a>
+
+                <p class="qr-text-desktop" style="color: #94a3b8; margin-bottom: 0.5rem;">Scan with GPay / Paytm / PhonePe</p>
+                <div class="qr-container">
+                    <img id="qrImage" src="" alt="Generating QR...">
+                </div>
+            </div>
+
+            <form onsubmit="handlePayment(event)">
+                <div class="form-group">
+                    <label class="form-label">Enter Delivery Email</label>
+                    <input type="email" class="form-input" placeholder="Your email address" required>
+                </div>
+                
+                <button type="submit" class="btn btn-confirm">I Have Paid - Submit Order</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Digital Redeem Store. <br>
+        <a href="#" style="color: #4facfe; text-decoration: none; font-size: 0.8rem;">Terms of Service</a>
+    </footer>
+
+    <script>
+        // Configuration
+        const upiID = "ashifshaikh@ptaxis";
+        const merchantName = "Ashif Shaikh";
+
+        // DOM Elements
+        const modal = document.getElementById('checkoutModal');
+        const qrImage = document.getElementById('qrImage');
+        const mobilePayAmount = document.getElementById('mobilePayAmount');
+        const upiLinkBtn = document.getElementById('upiLinkBtn');
+
+        function openModal(amount, productName) {
+            // Update Text
+            document.getElementById('modalTitle').innerText = productName;
+            mobilePayAmount.innerText = amount;
+
+            // Generate UPI Link (Standard Format)
+            const upiLink = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR`;
+            
+            // 1. Set the Mobile Button Link (Deep Link)
+            upiLinkBtn.href = upiLink;
+
+            // 2. Generate QR Code for Desktop Users
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=10&data=${encodeURIComponent(upiLink)}`;
+            qrImage.src = qrUrl;
+
+            // Show Modal
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.querySelector('form').reset();
+        }
+
+        // Close modal if clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Handle Form Submission
+        function handlePayment(e) {
+            e.preventDefault();
+            const submitBtn = document.querySelector('.btn-confirm');
+            const originalText = submitBtn.innerText;
+            
+            submitBtn.innerText = "Processing Order...";
+            submitBtn.style.opacity = "0.7";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                alert("Order Placed! We will verify payment on our end and email you.");
+                closeModal();
+                submitBtn.innerText = originalText;
+                submitBtn.style.opacity = "1";
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
